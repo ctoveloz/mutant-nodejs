@@ -1,0 +1,46 @@
+version: "3.2"
+services:
+  nodejs:
+    build: 
+      context: .
+    image: cristiano/mutant
+    networks:
+      - frontend
+      - backend
+    environment:
+      - MYSQL_HOST=cristiano-mysql-app
+      - MYSQL_USER=cristianouser
+      - MYSQL_PASS=cristianopass
+      - MYSQL_DB=mutant
+    volumes:
+      - ./www/:/var/www/html/
+    ports:
+      - "3001:3001"
+    container_name: cristiano-nodejs-app
+  mysql:
+    image: mysql:5.7
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=cristianouser
+      - MYSQL_PASSWORD=cristianopass
+      - MYSQL_DATABASE=mutant
+    container_name: cristiano-mysql-app
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - "30002:80"
+    environment:
+      - PMA_HOST=cristiano-mysql-app
+      - PMA_PORT= 3306
+    volumes:
+      - /sessions
+    container_name: cristiano-phpmyadmin-app
+networks:
+  frontend:
+  backend:

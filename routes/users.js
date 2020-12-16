@@ -4,11 +4,17 @@ const request = require('request');
 
 const router = express.Router();
 
+/* DB CONFIG */
+var mysqlHost = process.env.MYSQL_HOST || 'localhost';
+var mysqlUser = process.env.MYSQL_USER || 'cristiano';
+var mysqlPass = process.env.MYSQL_PASS || 'rootpass';
+var mysqlDB   = process.env.MYSQL_DB   || 'mutant';
+
 const db = mysql.createPool({
-  host: 'localhost',
-  user: 'cristiano',
-  password: 'password',
-  database: 'mutant',
+  host: mysqlHost,
+  user: mysqlUser,
+  password: mysqlPass,
+  database: mysqlDB
 });
 
 // index
