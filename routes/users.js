@@ -1,6 +1,14 @@
 const express = require('express');
 const mysql = require('mysql');
 const axios = require('axios');
+const log4js = require("log4js");
+
+/* LOGS CONFIG */
+log4js.configure({
+  appenders: { cheese: { type: "file", filename: "logs/log.txt" } },
+  categories: { default: { appenders: ["cheese"], level: "error" } }
+});
+const logger = log4js.getLogger("cheese");
 
 const router = express.Router();
 
@@ -19,10 +27,11 @@ const db = mysql.createPool({
 
 db.getConnection(function(err) {
   if (err) {
-    return console.error('erro: ' + err.message);
+    console.error('erro: ' + err.message);
+    logger.error(err);
+  } else{
+    console.log('Banco Conectado!');
   }
-
-  console.log('Banco Conectado!')
 });
 
 // index
@@ -52,8 +61,9 @@ router.post('/botaoBaixar', function(req, res){
     res.render('index', {box: JSON.stringify(data, null, 2)}); 
     globalData.push(data);
     return data
-  }).catch(function (error) {
-    console.log(error);
+  }).catch(function (err) {
+    console.log(err);
+    logger.error(err);
   });
 
 });
@@ -87,6 +97,7 @@ router.post('/botaoSalvar', function(req, res){
       db.query(createUsers, function(err, results, fields) {
         if (err) {
           console.log(err.message);
+          logger.error(err);
         }
         
         console.log('Tabela users criada');
@@ -108,6 +119,7 @@ router.post('/botaoSalvar', function(req, res){
           let sql = 'INSERT INTO users SET?';
           let query = db.query(sql, post, (err, res) => {
               if (err) {
+                logger.error(err);
                 throw err; 
               }
               else {
