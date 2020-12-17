@@ -1,8 +1,8 @@
 ## Instalação
 
 ```bash
-sudo docker build . -t cristiano/mutant
-sudo docker-compose up --build
+docker build . -t cristiano/mutant
+docker-compose up --build
 ```
 
 ## Uso
